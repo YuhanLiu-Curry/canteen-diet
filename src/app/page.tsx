@@ -59,14 +59,21 @@ export default async function Home() {
             <p className="text-sm text-gray-500">今天也要好好吃饭</p>
             <h1 className="text-lg font-bold">{user.nickname ?? "同学"}</h1>
           </div>
-          <form
-            action={async () => {
-              "use server";
-              await signOut({ redirectTo: "/login" });
-            }}
-          >
-            <button className="text-xs text-gray-400">退出</button>
-          </form>
+          <div className="flex items-center gap-3">
+            {user.isAdmin && (
+              <Link href="/admin" className="text-xs text-gray-400">
+                管理后台
+              </Link>
+            )}
+            <form
+              action={async () => {
+                "use server";
+                await signOut({ redirectTo: "/login" });
+              }}
+            >
+              <button className="text-xs text-gray-400">退出</button>
+            </form>
+          </div>
         </div>
 
         {/* 热量圆环卡 */}
