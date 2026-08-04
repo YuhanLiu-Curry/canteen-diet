@@ -21,7 +21,6 @@ export default async function HistoryPage() {
     take: 200,
   });
 
-  // 按天聚合
   const byDay = new Map<string, { kcal: number; items: typeof records }>();
   for (const r of records) {
     const key = r.date.toISOString().slice(0, 10);
@@ -32,37 +31,35 @@ export default async function HistoryPage() {
   }
 
   return (
-    <main className="flex min-h-screen flex-col items-center p-4 pb-24">
-      <div className="w-full max-w-md space-y-6 pt-6">
+    <main className="min-h-screen pb-8">
+      <div className="mx-auto w-full max-w-md px-4 space-y-5 pt-6">
         <div className="flex items-center justify-between">
           <h1 className="text-xl font-bold">历史记录</h1>
-          <Link href="/" className="text-sm text-gray-400 underline">返回今日</Link>
+          <Link href="/" className="text-sm text-gray-400">返回今日</Link>
         </div>
 
         {byDay.size === 0 && (
-          <p className="text-sm text-gray-400">还没有记录</p>
+          <div className="rounded-2xl bg-white p-6 text-center text-sm text-gray-400">
+            还没有记录
+          </div>
         )}
 
         {[...byDay.entries()].map(([day, { kcal, items }]) => (
-          <section key={day} className="space-y-1">
-            <div className="flex justify-between items-baseline border-b pb-1">
+          <section key={day} className="rounded-3xl bg-white shadow-sm p-4 space-y-1">
+            <div className="flex justify-between items-baseline pb-2 border-b border-gray-50">
               <h2 className="font-semibold">{day}</h2>
-              <span className="text-sm text-gray-500">{Math.round(kcal)} kcal</span>
+              <span className="text-sm font-semibold text-brand">{Math.round(kcal)} kcal</span>
             </div>
             {items.map((r) => (
-              <div key={r.id} className="flex justify-between text-sm py-1">
-                <span>
-                  <span className="text-gray-400 text-xs mr-1">
+              <div key={r.id} className="flex justify-between text-sm py-1.5">
+                <span className="text-gray-700">
+                  <span className="text-gray-400 text-xs mr-1.5">
                     {MEAL_LABEL[r.mealType] ?? r.mealType}
                   </span>
                   {r.dish.name}
-                  {r.servings !== 1 && (
-                    <span className="text-gray-400"> ×{r.servings}</span>
-                  )}
+                  {r.servings !== 1 && <span className="text-gray-400"> ×{r.servings}</span>}
                 </span>
-                <span className="text-gray-600">
-                  {Math.round(r.dish.kcal * r.servings)} kcal
-                </span>
+                <span className="text-gray-500">{Math.round(r.dish.kcal * r.servings)} kcal</span>
               </div>
             ))}
           </section>

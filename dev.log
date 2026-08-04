@@ -1,0 +1,393 @@
+
+> app@0.1.0 dev
+> next dev
+
+▲ Next.js 16.3.0 (Turbopack)
+- Local:         http://localhost:3000
+- Network:       http://172.16.83.131:3000
+- Environments: .env
+✓ Ready in 772ms
+✓ Running next.config.ts took 68ms
+
+ GET /login 200 in 330ms (next.js: 196ms, application-code: 134ms)
+[31m[auth][error][0m MissingSecret: Please define a `secret`. Read more at https://errors.authjs.dev#missingsecret
+    at assertConfig (D:\projects\no\app\.next\dev\server\chunks\node_modules_@auth_core_0gltlle._.js:3881:16)
+    at Auth (D:\projects\no\app\.next\dev\server\chunks\node_modules_@auth_core_0gltlle._.js:310:204)
+    at process.processTicksAndRejections (node:internal/process/task_queues:104:5)
+    at async AppRouteRouteModule.do (D:\projects\no\app\node_modules\next\dist\compiled\next-server\app-route-turbo.runtime.dev.js:5:42791)
+ GET /api/auth/csrf 500 in 1108ms (next.js: 1033ms, application-code: 75ms)
+[31m[auth][error][0m MissingSecret: Please define a `secret`. Read more at https://errors.authjs.dev#missingsecret
+    at assertConfig (D:\projects\no\app\.next\dev\server\chunks\node_modules_@auth_core_0gltlle._.js:3881:16)
+    at Auth (D:\projects\no\app\.next\dev\server\chunks\node_modules_@auth_core_0gltlle._.js:310:204)
+    at async AppRouteRouteModule.do (D:\projects\no\app\node_modules\next\dist\compiled\next-server\app-route-turbo.runtime.dev.js:5:42791)
+ GET /api/auth/csrf 500 in 22ms (next.js: 15ms, application-code: 7ms)
+  Reload env: .env
+ GET /api/auth/csrf 200 in 53ms (next.js: 39ms, application-code: 14ms)
+ GET /api/auth/csrf 200 in 26ms (next.js: 14ms, application-code: 12ms)
+[31m[auth][error][0m CredentialsSignin: Read more at https://errors.authjs.dev#credentialssignin
+    at Module.callback (D:\projects\no\app\.next\dev\server\chunks\node_modules_@auth_core_0gltlle._.js:1182:30)
+    at async AuthInternal (D:\projects\no\app\.next\dev\server\chunks\node_modules_@auth_core_0gltlle._.js:2511:24)
+    at async Auth (D:\projects\no\app\.next\dev\server\chunks\node_modules_@auth_core_0gltlle._.js:350:34)
+    at async AppRouteRouteModule.do (D:\projects\no\app\node_modules\next\dist\compiled\next-server\app-route-turbo.runtime.dev.js:5:42791)
+    at async AppRouteRouteModule.handle (D:\projects\no\app\node_modules\next\dist\compiled\next-server\app-route-turbo.runtime.dev.js:5:50709)
+    at async responseGenerator (D:\projects\no\app\.next\dev\server\chunks\node_modules_next_1t77v-r._.js:5328:30)
+    at async AppRouteRouteModule.handleResponse (D:\projects\no\app\node_modules\next\dist\compiled\next-server\app-route-turbo.runtime.dev.js:1:248823)
+    at async handleResponse (D:\projects\no\app\.next\dev\server\chunks\node_modules_next_1t77v-r._.js:5400:32)
+    at async Module.handler (D:\projects\no\app\.next\dev\server\chunks\node_modules_next_1t77v-r._.js:5520:9)
+    at async DevServer.renderToResponseWithComponentsImpl (D:\projects\no\app\node_modules\next\dist\server\base-server.js:1537:9)
+    at async DevServer.renderPageComponent (D:\projects\no\app\node_modules\next\dist\server\base-server.js:1589:24)
+    at async DevServer.renderToResponseImpl (D:\projects\no\app\node_modules\next\dist\server\base-server.js:1639:32)
+    at async DevServer.pipeImpl (D:\projects\no\app\node_modules\next\dist\server\base-server.js:1088:25)
+    at async NextNodeServer.handleCatchallRenderRequest (D:\projects\no\app\node_modules\next\dist\server\next-server.js:338:17)
+    at async DevServer.handleRequestImpl (D:\projects\no\app\node_modules\next\dist\server\base-server.js:979:17)
+    at async D:\projects\no\app\node_modules\next\dist\server\dev\next-dev-server.js:426:20
+    at async Span.traceAsyncFn (D:\projects\no\app\node_modules\next\dist\trace\trace.js:164:20)
+    at async DevServer.handleRequest (D:\projects\no\app\node_modules\next\dist\server\dev\next-dev-server.js:422:24)
+    at async invokeRender (D:\projects\no\app\node_modules\next\dist\server\lib\router-server.js:306:21)
+    at async handleRequest (D:\projects\no\app\node_modules\next\dist\server\lib\router-server.js:508:24)
+    at async requestHandlerImpl (D:\projects\no\app\node_modules\next\dist\server\lib\router-server.js:565:13)
+    at async Server.requestListener (D:\projects\no\app\node_modules\next\dist\server\lib\start-server.js:225:13)
+ POST /api/auth/callback/credentials 302 in 159ms (next.js: 6ms, application-code: 153ms)
+ GET /api/auth/session 200 in 9ms (next.js: 3ms, application-code: 7ms)
+ GET /api/auth/error 200 in 30ms (next.js: 19ms, application-code: 10ms)
+ GET /api/auth/error 200 in 28ms (next.js: 20ms, application-code: 8ms)
+ GET /api/auth/error 200 in 17ms (next.js: 6ms, application-code: 11ms)
+ GET /api/auth/error 200 in 20ms (next.js: 6ms, application-code: 14ms)
+ GET /api/auth/error 200 in 14ms (next.js: 5ms, application-code: 9ms)
+ GET / 307 in 347ms (next.js: 177ms, application-code: 170ms)
+ GET /login 200 in 79ms (next.js: 15ms, application-code: 64ms)
+[browser] A tree hydrated but some attributes of the server rendered HTML didn't match the client properties. This won't be patched up. This can happen if a SSR-ed Client Component used:
+
+- A server/client branch `if (typeof window !== 'undefined')`.
+- Variable input such as `Date.now()` or `Math.random()` which changes each time it's called.
+- Date formatting in a user's locale which doesn't match the server.
+- External changing data without sending a snapshot of it along with the HTML.
+- Invalid HTML tag nesting.
+
+It can also happen if the client has a browser extension installed which messes with the HTML before React loaded.
+
+https://react.dev/link/hydration-mismatch
+
+  ...
+    <HotReload globalError={[...]} webSocket={WebSocket} staticIndicatorState={{pathname:null, ...}}>
+      <AppDevOverlayErrorBoundary globalError={[...]}>
+        <ReplaySsrOnlyErrors>
+        <DevRootHTTPAccessFallbackBoundary>
+          <HTTPAccessFallbackBoundary notFound={<NotAllowedRootHTTPFallbackError>}>
+            <HTTPAccessFallbackErrorBoundary pathname="/login" notFound={<NotAllowedRootHTTPFallbackError>} ...>
+              <RedirectBoundary>
+                <RedirectErrorBoundary router={{...}}>
+                  <Head>
+                  <__next_root_layout_boundary__>
+                    <SegmentViewNode type="layout" pagePath="layout.tsx">
+                      <SegmentTrieNode>
+                      <link>
+                      <script>
+                      <RootLayout>
+                        <html
++                         lang="en"
+-                         lang="zh-CN"
+                          className="geist_a71539c9-module__T19VSG__variable geist_mono_8d43a2aa-module__8Li5zG__varia..."
+                        >
+                          ...
+                            <LoginPage params={Promise} searchParams={Promise}>
+                              <main className="flex min-h...">
+                                <form onSubmit={function handleSubmit} className="w-full max...">
+                                  <h1
+                                    className="text-2xl font-bold text-center"
+-                                   _msttexthash="5298241"
+-                                   _msthash="1"
+                                  >
++                                   登录
+                                  <input
+                                    type="email"
+                                    placeholder="邮箱"
+                                    value=""
+                                    onChange={function onChange}
+                                    required={true}
+                                    className="w-full rounded border px-3 py-2"
+-                                   _mstplaceholder="6663618"
+-                                   _msthash="2"
+                                  >
+                                  <input
+                                    type="password"
+                                    placeholder="密码"
+                                    value=""
+                                    onChange={function onChange}
+                                    required={true}
+                                    className="w-full rounded border px-3 py-2"
+-                                   _mstplaceholder="5332938"
+-                                   _msthash="3"
+                                  >
+                                  <button
+                                    type="submit"
+                                    disabled={false}
+                                    className="w-full rounded bg-black py-2 text-white disabled:opacity-50"
+-                                   _msttexthash="5298241"
+-                                   _msthash="4"
+                                  >
++                                   登录
+                                  <p
+                                    className="text-sm text-center text-gray-500"
+-                                   _msttexthash="33490340"
+-                                   _msthash="5"
+                                  >
+                  ...
+ 
+ GET /api/auth/providers 200 in 27ms (next.js: 18ms, application-code: 8ms)
+ GET /api/auth/csrf 200 in 10ms (next.js: 3ms, application-code: 7ms)
+ POST /api/auth/callback/credentials? 200 in 85ms (next.js: 4ms, application-code: 82ms)
+ GET / 200 in 97ms (next.js: 9ms, application-code: 88ms)
+ GET / 200 in 66ms (next.js: 10ms, application-code: 56ms)
+ GET /onboarding 200 in 214ms (next.js: 102ms, application-code: 112ms)
+ GET /onboarding 200 in 80ms (next.js: 10ms, application-code: 70ms)
+ GET / 200 in 85ms (next.js: 8ms, application-code: 77ms)
+ POST /onboarding 200 in 157ms (next.js: 9ms, application-code: 148ms)
+  └─ ƒ saveOnboarding({}) in 30ms onboarding/actions.ts
+ GET /record/add 200 in 267ms (next.js: 238ms, application-code: 29ms)
+ GET /api/dishes?q= 200 in 47ms (next.js: 36ms, application-code: 11ms)
+ GET /record/add 200 in 32ms (next.js: 7ms, application-code: 25ms)
+ GET /api/dishes?q= 200 in 12ms (next.js: 4ms, application-code: 8ms)
+ GET /api/dishes?q=wu 200 in 14ms (next.js: 3ms, application-code: 11ms)
+ GET /api/dishes?q= 200 in 8ms (next.js: 3ms, application-code: 6ms)
+ GET /api/dishes?q=di%27jiu%27shi%27t 200 in 10ms (next.js: 3ms, application-code: 8ms)
+ GET /api/dishes?q=%E7%AC%AC%E4%B9%9D%E5%B8%88%E5%9B%A2 200 in 8ms (next.js: 3ms, application-code: 5ms)
+ GET /api/dishes?q= 200 in 9ms (next.js: 3ms, application-code: 6ms)
+ GET /api/dishes?q=jiu 200 in 8ms (next.js: 2ms, application-code: 6ms)
+ GET /api/dishes?q= 200 in 10ms (next.js: 3ms, application-code: 7ms)
+ GET /api/dishes?q=%E7%83%AD%E5%B9%B2%E9%9D%A2 200 in 9ms (next.js: 3ms, application-code: 6ms)
+ GET /api/dishes?q= 200 in 13ms (next.js: 4ms, application-code: 9ms)
+ POST /api/records 200 in 215ms (next.js: 179ms, application-code: 36ms)
+ GET / 200 in 77ms (next.js: 10ms, application-code: 67ms)
+ GET / 200 in 78ms (next.js: 24ms, application-code: 54ms)
+ GET /api/auth/csrf 200 in 24ms (next.js: 15ms, application-code: 9ms)
+ POST /api/auth/callback/credentials 302 in 71ms (next.js: 3ms, application-code: 68ms)
+ GET /api/auth/session 200 in 12ms (next.js: 4ms, application-code: 8ms)
+ GET /api/dishes?q=%E9%B8%A1%E8%85%BF 200 in 10ms (next.js: 2ms, application-code: 7ms)
+ POST /api/records 200 in 34ms (next.js: 3ms, application-code: 31ms)
+ GET /api/records 200 in 26ms (next.js: 3ms, application-code: 23ms)
+ POST /api/corrections 200 in 171ms (next.js: 151ms, application-code: 20ms)
+ PATCH /api/admin/corrections/cmsef6rqn0002ioup98dai5ap 403 in 1157ms (next.js: 1143ms, application-code: 13ms)
+ GET /api/dishes?q=%E9%B8%A1%E8%85%BF 200 in 10ms (next.js: 3ms, application-code: 7ms)
+ GET /api/dishes?q=%E9%B8%A1%E8%85%BF 200 in 11ms (next.js: 3ms, application-code: 8ms)
+ GET / 200 in 118ms (next.js: 8ms, application-code: 110ms)
+[browser] Uncaught Error: Hydration failed because the server rendered HTML didn't match the client. As a result this tree will be regenerated on the client. This can happen if a SSR-ed Client Component used:
+
+- A server/client branch `if (typeof window !== 'undefined')`.
+- Variable input such as `Date.now()` or `Math.random()` which changes each time it's called.
+- Date formatting in a user's locale which doesn't match the server.
+- External changing data without sending a snapshot of it along with the HTML.
+- Invalid HTML tag nesting.
+
+It can also happen if the client has a browser extension installed which messes with the HTML before React loaded.
+
+https://react.dev/link/hydration-mismatch
+
+  ...
+    <HotReload globalError={[...]} webSocket={WebSocket} staticIndicatorState={{pathname:null, ...}}>
+      <AppDevOverlayErrorBoundary globalError={[...]}>
+        <ReplaySsrOnlyErrors>
+        <DevRootHTTPAccessFallbackBoundary>
+          <HTTPAccessFallbackBoundary notFound={<NotAllowedRootHTTPFallbackError>}>
+            <HTTPAccessFallbackErrorBoundary pathname="/" notFound={<NotAllowedRootHTTPFallbackError>} ...>
+              <RedirectBoundary>
+                <RedirectErrorBoundary router={{...}}>
+                  <Head>
+                  <__next_root_layout_boundary__>
+                    <SegmentViewNode type="layout" pagePath="layout.tsx">
+                      <SegmentTrieNode>
+                      <link>
+                      <script>
+                      <RootLayout>
+                        <html
++                         lang="en"
+-                         lang="zh-CN"
+                          className="geist_a71539c9-module__T19VSG__variable geist_mono_8d43a2aa-module__8Li5zG__varia..."
+                        >
+                          ...
+                            <Home>
+                              <main className="flex min-h...">
+                                <div className="w-full max...">
+                                  <div className="text-cente...">
+                                    <p
+                                      className="text-sm text-gray-500"
+-                                     _msttexthash="18571124"
+-                                     _msthash="1"
+                                    >
++                                     今日还可摄入
+                                    <p
+                                      className={"text-6xl font-bold "}
+-                                     _msttexthash="21645"
+-                                     _msthash="2"
+                                    >
++                                     2011
+                                    <p className="text-sm te...">
++                                     {"kcal / 目标 "}
+-                                     <font _mstmutation="1" _msttexthash="9444370" _msthash="3">
+                                      ...
+                                  ...
+                  ...
+
+    at <unknown> (https://react.dev/link/hydration-mismatch)
+    at p (<anonymous>)
+    at Home (src\app\page.tsx:57:11)
+  55 |             {Math.abs(Math.round(remaining))}
+  56 |           </p>
+> 57 |           <p className="text-sm text-gray-500">
+     |           ^
+  58 |             kcal / 目标 {user.dailyKcalTarget} kcal
+  59 |           </p>
+  60 |         </div>
+ GET / 200 in 61ms (next.js: 9ms, application-code: 51ms)
+[browser] Uncaught Error: Hydration failed because the server rendered HTML didn't match the client. As a result this tree will be regenerated on the client. This can happen if a SSR-ed Client Component used:
+
+- A server/client branch `if (typeof window !== 'undefined')`.
+- Variable input such as `Date.now()` or `Math.random()` which changes each time it's called.
+- Date formatting in a user's locale which doesn't match the server.
+- External changing data without sending a snapshot of it along with the HTML.
+- Invalid HTML tag nesting.
+
+It can also happen if the client has a browser extension installed which messes with the HTML before React loaded.
+
+https://react.dev/link/hydration-mismatch
+
+  ...
+    <HotReload globalError={[...]} webSocket={WebSocket} staticIndicatorState={{pathname:null, ...}}>
+      <AppDevOverlayErrorBoundary globalError={[...]}>
+        <ReplaySsrOnlyErrors>
+        <DevRootHTTPAccessFallbackBoundary>
+          <HTTPAccessFallbackBoundary notFound={<NotAllowedRootHTTPFallbackError>}>
+            <HTTPAccessFallbackErrorBoundary pathname="/" notFound={<NotAllowedRootHTTPFallbackError>} ...>
+              <RedirectBoundary>
+                <RedirectErrorBoundary router={{...}}>
+                  <Head>
+                  <__next_root_layout_boundary__>
+                    <SegmentViewNode type="layout" pagePath="layout.tsx">
+                      <SegmentTrieNode>
+                      <link>
+                      <script>
+                      <RootLayout>
+                        <html
++                         lang="en"
+-                         lang="zh-CN"
+                          className="geist_a71539c9-module__T19VSG__variable geist_mono_8d43a2aa-module__8Li5zG__varia..."
+                        >
+                          ...
+                            <Home>
+                              <main className="flex min-h...">
+                                <div className="w-full max...">
+                                  <div className="text-cente...">
+                                    <p
+                                      className="text-sm text-gray-500"
+-                                     _msttexthash="18571124"
+-                                     _msthash="1"
+                                    >
++                                     今日还可摄入
+                                    <p
+                                      className={"text-6xl font-bold "}
+-                                     _msttexthash="21645"
+-                                     _msthash="2"
+                                    >
++                                     2011
+                                    <p className="text-sm te...">
++                                     {"kcal / 目标 "}
+-                                     <font _mstmutation="1" _msttexthash="9444370" _msthash="3">
+                                      ...
+                                  ...
+                  ...
+
+    at <unknown> (https://react.dev/link/hydration-mismatch)
+    at p (<anonymous>)
+    at Home (src\app\page.tsx:57:11)
+  55 |             {Math.abs(Math.round(remaining))}
+  56 |           </p>
+> 57 |           <p className="text-sm text-gray-500">
+     |           ^
+  58 |             kcal / 目标 {user.dailyKcalTarget} kcal
+  59 |           </p>
+  60 |         </div>
+ GET /browse 200 in 129ms (next.js: 79ms, application-code: 50ms)
+ GET / 200 in 54ms (next.js: 7ms, application-code: 47ms)
+ GET /record/add 200 in 35ms (next.js: 10ms, application-code: 25ms)
+ GET /onboarding 200 in 50ms (next.js: 9ms, application-code: 41ms)
+ GET / 200 in 102ms (next.js: 10ms, application-code: 92ms)
+ GET / 200 in 87ms (next.js: 10ms, application-code: 77ms)
+ GET /login 200 in 39ms (next.js: 10ms, application-code: 29ms)
+ GET / 200 in 99ms (next.js: 6ms, application-code: 92ms)
+[browser] Uncaught Error: Hydration failed because the server rendered HTML didn't match the client. As a result this tree will be regenerated on the client. This can happen if a SSR-ed Client Component used:
+
+- A server/client branch `if (typeof window !== 'undefined')`.
+- Variable input such as `Date.now()` or `Math.random()` which changes each time it's called.
+- Date formatting in a user's locale which doesn't match the server.
+- External changing data without sending a snapshot of it along with the HTML.
+- Invalid HTML tag nesting.
+
+It can also happen if the client has a browser extension installed which messes with the HTML before React loaded.
+
+https://react.dev/link/hydration-mismatch
+
+  ...
+    <HotReload globalError={[...]} webSocket={WebSocket} staticIndicatorState={{pathname:null, ...}}>
+      <AppDevOverlayErrorBoundary globalError={[...]}>
+        <ReplaySsrOnlyErrors>
+        <DevRootHTTPAccessFallbackBoundary>
+          <HTTPAccessFallbackBoundary notFound={<NotAllowedRootHTTPFallbackError>}>
+            <HTTPAccessFallbackErrorBoundary pathname="/" notFound={<NotAllowedRootHTTPFallbackError>} ...>
+              <RedirectBoundary>
+                <RedirectErrorBoundary router={{...}}>
+                  <Head>
+                  <__next_root_layout_boundary__>
+                    <SegmentViewNode type="layout" pagePath="layout.tsx">
+                      <SegmentTrieNode>
+                      <link>
+                      <script>
+                      <RootLayout>
+                        <html
++                         lang="en"
+-                         lang="zh-CN"
+                          className="geist_a71539c9-module__T19VSG__variable geist_mono_8d43a2aa-module__8Li5zG__varia..."
+                        >
+                          ...
+                            <Home>
+                              <main className="flex min-h...">
+                                <div className="w-full max...">
+                                  <div className="text-cente...">
+                                    <p
+                                      className="text-sm text-gray-500"
+-                                     _msttexthash="18571124"
+-                                     _msthash="1"
+                                    >
++                                     今日还可摄入
+                                    <p
+                                      className={"text-6xl font-bold "}
+-                                     _msttexthash="21645"
+-                                     _msthash="2"
+                                    >
++                                     2011
+                                    <p className="text-sm te...">
++                                     {"kcal / 目标 "}
+-                                     <font _mstmutation="1" _msttexthash="9444370" _msthash="3">
+                                      ...
+                                  ...
+                  ...
+
+    at <unknown> (https://react.dev/link/hydration-mismatch)
+    at p (<anonymous>)
+    at Home (src\app\page.tsx:57:11)
+  55 |             {Math.abs(Math.round(remaining))}
+  56 |           </p>
+> 57 |           <p className="text-sm text-gray-500">
+     |           ^
+  58 |             kcal / 目标 {user.dailyKcalTarget} kcal
+  59 |           </p>
+  60 |         </div>
+✓ Compiled in 409ms
+ GET / 200 in 48ms (next.js: 17ms, application-code: 31ms)
+ GET /login 200 in 33ms (next.js: 5ms, application-code: 28ms)
+ POST / 200 in 84ms (next.js: 6ms, application-code: 78ms)
+  └─ ƒ <inline action>() in 23ms page.tsx
+ GET /api/auth/providers 200 in 25ms (next.js: 18ms, application-code: 7ms)
+ GET /api/auth/csrf 200 in 11ms (next.js: 3ms, application-code: 7ms)
+ POST /api/auth/callback/credentials? 200 in 94ms (next.js: 4ms, application-code: 90ms)
+ GET / 200 in 73ms (next.js: 7ms, application-code: 66ms)
+ GET / 200 in 78ms (next.js: 8ms, application-code: 70ms)
