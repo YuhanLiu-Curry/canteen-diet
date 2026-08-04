@@ -15,12 +15,19 @@ export async function POST(request: Request) {
   }
   const body = await request.json();
   const { name, stallId, kcal, proteinG, carbsG, fatG, confidence } = body;
-  if (!name || !stallId || kcal == null || proteinG == null || carbsG == null || fatG == null) {
+  const trimmed = typeof name === "string" ? name.trim() : "";
+  if (!trimmed || !stallId || kcal == null || proteinG == null || carbsG == null || fatG == null) {
     return NextResponse.json({ error: "字段不完整" }, { status: 400 });
+  }
+  const exists = await prisma.dish.findFirst({
+    where: { name: trimmed, stallId },
+  });
+  if (exists) {
+    return NextResponse.json({ error: `该窗口下已有「${trimmed}」` }, { status: 409 });
   }
   const dish = await prisma.dish.create({
     data: {
-      name,
+      name: trimmed,
       stallId,
       kcal,
       proteinG,

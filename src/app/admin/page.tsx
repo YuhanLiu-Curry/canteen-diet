@@ -2,7 +2,7 @@ import { auth } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
 import { redirect } from "next/navigation";
 import Link from "next/link";
-import { AddCanteenForm, AddStallForm, AddDishForm, CorrectionQueue } from "./forms";
+import { AddCanteenForm, AddStallForm, AddDishForm, CorrectionQueue, DeleteManager } from "./forms";
 
 export default async function AdminPage() {
   const session = await auth();
@@ -11,7 +11,7 @@ export default async function AdminPage() {
   if (!user?.isAdmin) redirect("/");
 
   const canteens = await prisma.canteen.findMany({
-    include: { stalls: true },
+    include: { stalls: { include: { dishes: { select: { id: true } } } } },
     orderBy: { name: "asc" },
   });
   const pendingCorrections = await prisma.correction.findMany({
@@ -42,6 +42,12 @@ export default async function AdminPage() {
           <AddCanteenForm />
           <AddStallForm canteens={canteens} />
           <AddDishForm canteens={canteens} />
+        </section>
+
+        {/* 结构管理 */}
+        <section className="space-y-3">
+          <h2 className="font-semibold border-b pb-1">结构管理（空的可删除）</h2>
+          <DeleteManager canteens={canteens} />
         </section>
       </div>
     </main>

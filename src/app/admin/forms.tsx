@@ -5,18 +5,21 @@ import { useRouter } from "next/navigation";
 
 type Canteen = { id: string; name: string; stalls: { id: string; name: string }[] };
 
-async function post(url: string, body: object) {
+async function post(url: string, body: object): Promise<{ ok: boolean; error?: string }> {
   const res = await fetch(url, {
     method: "POST",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify(body),
   });
-  return res.ok;
+  if (res.ok) return { ok: true };
+  const data = await res.json().catch(() => ({}));
+  return { ok: false, error: data.error ?? "操作失败" };
 }
 
 export function AddCanteenForm() {
   const [name, setName] = useState("");
   const [type, setType] = useState("canteen");
+  const [error, setError] = useState("");
   const router = useRouter();
 
   return (
@@ -24,9 +27,13 @@ export function AddCanteenForm() {
       className="flex gap-2 items-end"
       onSubmit={async (e) => {
         e.preventDefault();
-        if (await post("/api/admin/canteens", { name, type })) {
+        const r = await post("/api/admin/canteens", { name, type });
+        if (r.ok) {
           setName("");
+          setError("");
           router.refresh();
+        } else {
+          setError(r.error ?? "");
         }
       }}
     >
@@ -39,6 +46,7 @@ export function AddCanteenForm() {
           placeholder="如 五食堂 / 罗森（鼓楼店）"
           className="w-full rounded border px-2 py-2 text-sm"
         />
+        {error && <p className="text-xs text-red-500 mt-1">{error}</p>}
       </div>
       <select
         value={type}
@@ -56,6 +64,7 @@ export function AddCanteenForm() {
 export function AddStallForm({ canteens }: { canteens: Canteen[] }) {
   const [name, setName] = useState("");
   const [canteenId, setCanteenId] = useState("");
+  const [error, setError] = useState("");
   const router = useRouter();
 
   return (
@@ -63,9 +72,13 @@ export function AddStallForm({ canteens }: { canteens: Canteen[] }) {
       className="flex gap-2 items-end"
       onSubmit={async (e) => {
         e.preventDefault();
-        if (await post("/api/admin/stalls", { name, canteenId })) {
+        const r = await post("/api/admin/stalls", { name, canteenId });
+        if (r.ok) {
           setName("");
+          setError("");
           router.refresh();
+        } else {
+          setError(r.error ?? "");
         }
       }}
     >
@@ -78,6 +91,7 @@ export function AddStallForm({ canteens }: { canteens: Canteen[] }) {
           placeholder="如 川湘窗口 / 饭团"
           className="w-full rounded border px-2 py-2 text-sm"
         />
+        {error && <p className="text-xs text-red-500 mt-1">{error}</p>}
       </div>
       <select
         value={canteenId}
@@ -98,6 +112,7 @@ export function AddStallForm({ canteens }: { canteens: Canteen[] }) {
 export function AddDishForm({ canteens }: { canteens: Canteen[] }) {
   const [canteenId, setCanteenId] = useState("");
   const [stallId, setStallId] = useState("");
+  const [error, setError] = useState("");
   const [form, setForm] = useState({
     name: "", kcal: "", proteinG: "", carbsG: "", fatG: "", confidence: "estimated",
   });
@@ -126,7 +141,7 @@ export function AddDishForm({ canteens }: { canteens: Canteen[] }) {
       className="rounded border p-3 space-y-2"
       onSubmit={async (e) => {
         e.preventDefault();
-        const ok = await post("/api/admin/dishes", {
+        const r = await post("/api/admin/dishes", {
           name: form.name,
           stallId,
           kcal: Number(form.kcal),
@@ -135,13 +150,17 @@ export function AddDishForm({ canteens }: { canteens: Canteen[] }) {
           fatG: Number(form.fatG),
           confidence: form.confidence,
         });
-        if (ok) {
+        if (r.ok) {
           setForm({ name: "", kcal: "", proteinG: "", carbsG: "", fatG: "", confidence: form.confidence });
+          setError("");
           router.refresh();
+        } else {
+          setError(r.error ?? "");
         }
       }}
     >
       <label className="block text-xs text-gray-500">新增菜品</label>
+      {error && <p className="text-xs text-red-500">{error}</p>}
       <div className="flex gap-2">
         <select
           value={canteenId}
@@ -187,8 +206,77 @@ export function AddDishForm({ canteens }: { canteens: Canteen[] }) {
   );
 }
 
-type Correction = {
+type CanteenFull = {
   id: string;
+  name: string;
+  type: string;
+  stalls: { id: string; name: string; dishes: { id: string }[] }[];
+};
+
+export function DeleteManager({ canteens }: { canteens: CanteenFull[] }) {
+  const router = useRouter();
+  const [error, setError] = useState("");
+
+  async function del(url: string, id: string) {
+    const res = await fetch(url, {
+      method: "DELETE",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ id }),
+    });
+    if (res.ok) {
+      setError("");
+      router.refresh();
+    } else {
+      const data = await res.json().catch(() => ({}));
+      setError(data.error ?? "删除失败");
+    }
+  }
+
+  return (
+    <div className="space-y-2">
+      {error && <p className="text-xs text-red-500">{error}</p>}
+      {canteens.map((c) => {
+        const totalDishes = c.stalls.reduce((n, s) => n + s.dishes.length, 0);
+        return (
+          <div key={c.id} className="rounded border p-3 space-y-1.5">
+            <div className="flex items-center justify-between">
+              <span className="font-medium text-sm">
+                {c.name}
+                <span className="text-xs text-gray-400 ml-2">{totalDishes} 道菜</span>
+              </span>
+              {totalDishes === 0 && (
+                <button
+                  onClick={() => del("/api/admin/canteens", c.id)}
+                  className="text-xs text-red-500"
+                >
+                  删除
+                </button>
+              )}
+            </div>
+            {c.stalls.map((s) => (
+              <div key={s.id} className="flex items-center justify-between pl-3 text-sm text-gray-500">
+                <span>
+                  {s.name}
+                  <span className="text-xs text-gray-400 ml-2">{s.dishes.length} 道菜</span>
+                </span>
+                {s.dishes.length === 0 && (
+                  <button
+                    onClick={() => del("/api/admin/stalls", s.id)}
+                    className="text-xs text-red-500"
+                  >
+                    删除
+                  </button>
+                )}
+              </div>
+            ))}
+          </div>
+        );
+      })}
+    </div>
+  );
+}
+
+type Correction = {  id: string;
   field: string;
   oldValue: string;
   newValue: string;
