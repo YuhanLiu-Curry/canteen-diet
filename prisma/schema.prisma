@@ -1,0 +1,128 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+}
+
+// ─── Auth.js 所需表 ───
+
+model Account {
+  id                String  @id @default(cuid())
+  userId            String
+  type              String
+  provider          String
+  providerAccountId String
+  refresh_token     String?
+  access_token      String?
+  expires_at        Int?
+  token_type        String?
+  scope             String?
+  id_token          String?
+  session_state     String?
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([provider, providerAccountId])
+}
+
+model Session {
+  id           String   @id @default(cuid())
+  sessionToken String   @unique
+  userId       String
+  expires      DateTime
+  user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+model VerificationToken {
+  identifier String
+  token      String   @unique
+  expires    DateTime
+
+  @@unique([identifier, token])
+}
+
+// ─── 业务模型（PRD §6）───
+
+model User {
+  id              String   @id @default(cuid())
+  email           String   @unique
+  emailVerified   DateTime?
+  passwordHash    String?
+  nickname        String?
+  // onboarding 目标设置
+  gender          String?  // male / female
+  heightCm        Float?
+  weightKg        Float?
+  targetWeightKg  Float?
+  pace            String?  // mild / aggressive
+  dailyKcalTarget Int?
+  isAdmin         Boolean  @default(false)
+  createdAt       DateTime @default(now())
+
+  accounts    Account[]
+  sessions    Session[]
+  records     MealRecord[]
+  corrections Correction[]
+}
+
+model Canteen {
+  id     String  @id @default(cuid())
+  name   String
+  type   String  @default("canteen") // canteen / convenience_store
+  stalls Stall[]
+}
+
+model Stall {
+  id        String  @id @default(cuid())
+  name      String
+  canteenId String
+  canteen   Canteen @relation(fields: [canteenId], references: [id], onDelete: Cascade)
+  dishes    Dish[]
+}
+
+model Dish {
+  id          String  @id @default(cuid())
+  name        String
+  stallId     String
+  stall       Stall   @relation(fields: [stallId], references: [id], onDelete: Cascade)
+  kcal        Float // 每份（便利店为每包装）
+  proteinG    Float
+  carbsG      Float
+  fatG        Float
+  confidence  String  @default("estimated") // estimated / calibrated / verified / label
+  dataVersion Int     @default(1)
+  isActive    Boolean @default(true)
+
+  records     MealRecord[]
+  corrections Correction[]
+}
+
+model MealRecord {
+  id        String   @id @default(cuid())
+  userId    String
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  dishId    String
+  dish      Dish     @relation(fields: [dishId], references: [id])
+  mealType  String // breakfast / lunch / dinner / snack
+  servings  Float    @default(1) // 0.5 / 1 / 1.5 / 2
+  date      DateTime // 自然日（存当天 00:00）
+  createdAt DateTime @default(now())
+
+  @@index([userId, date])
+}
+
+model Correction {
+  id        String   @id @default(cuid())
+  dishId    String
+  dish      Dish     @relation(fields: [dishId], references: [id], onDelete: Cascade)
+  userId    String
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  field     String // kcal / proteinG / carbsG / fatG / existence
+  oldValue  String
+  newValue  String
+  reason    String?
+  status    String   @default("pending") // pending / approved / rejected
+  createdAt DateTime @default(now())
+}
