@@ -11,6 +11,17 @@ type Dish = {
   stall: { name: string; canteen: { name: string } };
 };
 
+type CanteenTree = {
+  id: string;
+  name: string;
+  type: string;
+  stalls: {
+    id: string;
+    name: string;
+    dishes: { id: string; name: string; kcal: number; proteinG: number }[];
+  }[];
+};
+
 const MEALS = [
   { value: "breakfast", label: "早餐" },
   { value: "lunch", label: "午餐" },
@@ -23,6 +34,8 @@ const SERVINGS = [0.5, 1, 1.5, 2];
 export default function AddRecordPage() {
   const [query, setQuery] = useState("");
   const [dishes, setDishes] = useState<Dish[]>([]);
+  const [tree, setTree] = useState<CanteenTree[]>([]);
+  const [openCanteen, setOpenCanteen] = useState<string | null>(null);
   const [selected, setSelected] = useState<Dish | null>(null);
   const [mealType, setMealType] = useState("lunch");
   const [servings, setServings] = useState(1);
@@ -30,12 +43,25 @@ export default function AddRecordPage() {
   const router = useRouter();
 
   useEffect(() => {
+    fetch("/api/canteens").then((r) => r.json()).then(setTree);
+  }, []);
+
+  useEffect(() => {
+    if (!query) return;
     const t = setTimeout(async () => {
       const res = await fetch(`/api/dishes?q=${encodeURIComponent(query)}`);
       setDishes(await res.json());
     }, 200);
     return () => clearTimeout(t);
   }, [query]);
+
+  function pickDish(d: { id: string; name: string; kcal: number; proteinG: number }, path: string) {
+    const [canteenName, stallName] = path.split(" / ");
+    setSelected({
+      ...d,
+      stall: { name: stallName, canteen: { name: canteenName } },
+    });
+  }
 
   async function handleSubmit() {
     if (!selected) return;
@@ -140,27 +166,74 @@ export default function AddRecordPage() {
           className="w-full rounded-2xl border-0 bg-white shadow-sm px-4 py-3.5 text-lg focus:ring-2 focus:ring-brand outline-none"
         />
         <div className="space-y-2">
-          {dishes.map((d) => (
-            <button
-              key={d.id}
-              onClick={() => setSelected(d)}
-              className="w-full flex items-center justify-between rounded-2xl bg-white shadow-sm px-4 py-3.5 text-left active:bg-gray-50"
-            >
-              <div>
-                <p className="font-medium text-gray-900">{d.name}</p>
-                <p className="text-xs text-gray-400">
-                  {d.stall.canteen.name} {d.stall.name}
+          {query ? (
+            <>
+              {dishes.map((d) => (
+                <button
+                  key={d.id}
+                  onClick={() => setSelected(d)}
+                  className="w-full flex items-center justify-between rounded-2xl bg-white shadow-sm px-4 py-3.5 text-left active:bg-gray-50"
+                >
+                  <div>
+                    <p className="font-medium text-gray-900">{d.name}</p>
+                    <p className="text-xs text-gray-400">
+                      {d.stall.canteen.name} {d.stall.name}
+                    </p>
+                  </div>
+                  <span className="text-sm font-semibold text-brand">
+                    {Math.round(d.kcal)} kcal
+                  </span>
+                </button>
+              ))}
+              {dishes.length === 0 && (
+                <p className="text-sm text-gray-400 text-center pt-8">
+                  没找到「{query}」——菜品库还在建设中
                 </p>
-              </div>
-              <span className="text-sm font-semibold text-brand">
-                {Math.round(d.kcal)} kcal
-              </span>
-            </button>
-          ))}
-          {dishes.length === 0 && query && (
-            <p className="text-sm text-gray-400 text-center pt-8">
-              没找到「{query}」——菜品库还在建设中
-            </p>
+              )}
+            </>
+          ) : (
+            <div className="space-y-3">
+              {tree.map((c) => (
+                <section key={c.id} className="space-y-1.5">
+                  <button
+                    onClick={() => setOpenCanteen(openCanteen === c.id ? null : c.id)}
+                    className="w-full flex items-center justify-between rounded-2xl bg-white shadow-sm px-4 py-3 font-semibold text-gray-900"
+                  >
+                    <span>
+                      {c.name}
+                      {c.type === "convenience_store" && (
+                        <span className="ml-2 text-xs font-normal bg-brand-soft text-brand-dark rounded-full px-2 py-0.5">
+                          便利店
+                        </span>
+                      )}
+                    </span>
+                    <span className="text-gray-300 text-sm">
+                      {openCanteen === c.id ? "▲" : "▼"}
+                    </span>
+                  </button>
+                  {openCanteen === c.id &&
+                    c.stalls.map((s) => (
+                      <div key={s.id} className="space-y-1.5 pl-2">
+                        <p className="text-xs font-medium text-gray-400 px-2 pt-1">
+                          {s.name}
+                        </p>
+                        {s.dishes.map((d) => (
+                          <button
+                            key={d.id}
+                            onClick={() => pickDish(d, `${c.name} / ${s.name}`)}
+                            className="w-full flex items-center justify-between rounded-2xl bg-white shadow-sm px-4 py-3 text-left active:bg-gray-50"
+                          >
+                            <span className="font-medium text-gray-900">{d.name}</span>
+                            <span className="text-sm font-semibold text-brand">
+                              {Math.round(d.kcal)} kcal
+                            </span>
+                          </button>
+                        ))}
+                      </div>
+                    ))}
+                </section>
+              ))}
+            </div>
           )}
         </div>
       </div>
