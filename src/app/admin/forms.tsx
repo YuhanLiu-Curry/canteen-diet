@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useRef } from "react";
 import { useRouter } from "next/navigation";
 
 type Canteen = { id: string; name: string; stalls: { id: string; name: string }[] };
@@ -113,18 +113,23 @@ export function AddDishForm({ canteens }: { canteens: Canteen[] }) {
   const [canteenId, setCanteenId] = useState("");
   const [stallId, setStallId] = useState("");
   const [error, setError] = useState("");
+  const [count, setCount] = useState(0);
+  const [lastAdded, setLastAdded] = useState("");
+  const nameRef = useRef<HTMLInputElement>(null);
   const [form, setForm] = useState({
     name: "", kcal: "", proteinG: "", carbsG: "", fatG: "", confidence: "estimated",
   });
   const router = useRouter();
 
   const stalls = canteens.find((c) => c.id === canteenId)?.stalls ?? [];
+  const locked = stallId !== ""; // 已选窗口后进入批量模式，锁定食堂/窗口
 
   function field(key: keyof typeof form, label: string, w = "flex-1") {
     return (
       <div className={w}>
         <label className="block text-xs text-gray-500 mb-1">{label}</label>
         <input
+          ref={key === "name" ? nameRef : undefined}
           value={form[key]}
           onChange={(e) => setForm({ ...form, [key]: e.target.value })}
           required
@@ -151,20 +156,31 @@ export function AddDishForm({ canteens }: { canteens: Canteen[] }) {
           confidence: form.confidence,
         });
         if (r.ok) {
-          setForm({ name: "", kcal: "", proteinG: "", carbsG: "", fatG: "", confidence: form.confidence });
+          setLastAdded(form.name);
+          setCount((n) => n + 1);
           setError("");
+          // 批量模式：保留食堂/窗口/置信度，只清空菜名和营养值
+          setForm({ name: "", kcal: "", proteinG: "", carbsG: "", fatG: "", confidence: form.confidence });
+          nameRef.current?.focus();
           router.refresh();
         } else {
           setError(r.error ?? "");
         }
       }}
     >
-      <label className="block text-xs text-gray-500">新增菜品</label>
+      <div className="flex items-center justify-between">
+        <label className="block text-xs text-gray-500">批量录入菜品</label>
+        {count > 0 && (
+          <span className="text-xs text-brand-dark">
+            已录 {count} 道{lastAdded ? `，刚录「${lastAdded}」` : ""}
+          </span>
+        )}
+      </div>
       {error && <p className="text-xs text-red-500">{error}</p>}
       <div className="flex gap-2">
         <select
           value={canteenId}
-          onChange={(e) => { setCanteenId(e.target.value); setStallId(""); }}
+          onChange={(e) => { setCanteenId(e.target.value); setStallId(""); setCount(0); }}
           required
           className="rounded border px-2 py-2 text-sm"
         >
@@ -175,7 +191,7 @@ export function AddDishForm({ canteens }: { canteens: Canteen[] }) {
         </select>
         <select
           value={stallId}
-          onChange={(e) => setStallId(e.target.value)}
+          onChange={(e) => { setStallId(e.target.value); setCount(0); }}
           required
           className="rounded border px-2 py-2 text-sm"
         >
@@ -201,7 +217,9 @@ export function AddDishForm({ canteens }: { canteens: Canteen[] }) {
         {field("carbsG", "碳水g")}
         {field("fatG", "脂肪g")}
       </div>
-      <button className="rounded bg-black px-4 py-2 text-white text-sm">添加菜品</button>
+      <button className="rounded bg-black px-4 py-2 text-white text-sm">
+        {locked ? "添加并继续下一道" : "添加菜品"}
+      </button>
     </form>
   );
 }
