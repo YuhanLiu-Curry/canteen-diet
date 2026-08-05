@@ -23,6 +23,14 @@ type CanteenTree = {
   }[];
 };
 
+type PersonalDish = {
+  id: string;
+  name: string;
+  kcal: number;
+  proteinG: number;
+  servingDesc?: string | null;
+};
+
 const MEALS = [
   { value: "breakfast", label: "早餐" },
   { value: "lunch", label: "午餐" },
@@ -36,6 +44,7 @@ export default function AddRecordPage() {
   const [query, setQuery] = useState("");
   const [dishes, setDishes] = useState<Dish[]>([]);
   const [tree, setTree] = useState<CanteenTree[]>([]);
+  const [personal, setPersonal] = useState<PersonalDish[]>([]);
   const [openCanteen, setOpenCanteen] = useState<string | null>(null);
   const [selected, setSelected] = useState<Dish | null>(null);
   const [customMode, setCustomMode] = useState(false);
@@ -47,6 +56,9 @@ export default function AddRecordPage() {
 
   useEffect(() => {
     fetch("/api/canteens").then((r) => r.json()).then(setTree);
+    fetch("/api/dishes/personal").then((r) => r.json()).then((d) => {
+      if (Array.isArray(d)) setPersonal(d);
+    });
   }, []);
 
   useEffect(() => {
@@ -288,6 +300,24 @@ export default function AddRecordPage() {
             </>
           ) : (
             <div className="space-y-3">
+              {/* 我的自定义 */}
+              {personal.length > 0 && (
+                <section className="space-y-1.5">
+                  <p className="text-xs font-medium text-gray-400 px-2">我的自定义</p>
+                  {personal.map((d) => (
+                    <button
+                      key={d.id}
+                      onClick={() => pickDish(d, "我的自定义 / 个人菜")}
+                      className="w-full flex items-center justify-between rounded-2xl bg-white shadow-sm px-4 py-3 text-left active:bg-gray-50"
+                    >
+                      <span className="font-medium text-gray-900">{d.name}</span>
+                      <span className="text-sm font-semibold text-brand">
+                        {Math.round(d.kcal)} kcal
+                      </span>
+                    </button>
+                  ))}
+                </section>
+              )}
               {tree.map((c) => (
                 <section key={c.id} className="space-y-1.5">
                   <button
