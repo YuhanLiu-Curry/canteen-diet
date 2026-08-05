@@ -150,7 +150,8 @@ export default async function Home() {
                   )}
                 </p>
                 <p className="text-xs text-gray-400">
-                  {MEAL_LABEL[r.mealType] ?? r.mealType} · {r.dish.stall.canteen.name} {r.dish.stall.name}
+                  {MEAL_LABEL[r.mealType] ?? r.mealType} ·{" "}
+                  {r.dish.userId ? "我的自定义" : `${r.dish.stall.canteen.name} ${r.dish.stall.name}`}
                 </p>
               </div>
               <div className="flex items-center gap-3">
