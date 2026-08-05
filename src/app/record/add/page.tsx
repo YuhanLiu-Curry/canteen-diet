@@ -38,6 +38,8 @@ export default function AddRecordPage() {
   const [tree, setTree] = useState<CanteenTree[]>([]);
   const [openCanteen, setOpenCanteen] = useState<string | null>(null);
   const [selected, setSelected] = useState<Dish | null>(null);
+  const [customMode, setCustomMode] = useState(false);
+  const [custom, setCustom] = useState({ name: "", kcal: "", proteinG: "", carbsG: "", fatG: "" });
   const [mealType, setMealType] = useState("lunch");
   const [servings, setServings] = useState(1);
   const [loading, setLoading] = useState(false);
@@ -64,6 +66,26 @@ export default function AddRecordPage() {
     });
   }
 
+  async function handleCustomSubmit() {
+    if (!custom.name.trim() || !custom.kcal) return;
+    setLoading(true);
+    await fetch("/api/records/custom", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        name: custom.name,
+        kcal: Number(custom.kcal),
+        proteinG: Number(custom.proteinG) || 0,
+        carbsG: Number(custom.carbsG) || 0,
+        fatG: Number(custom.fatG) || 0,
+        mealType,
+        servings,
+      }),
+    });
+    router.push("/");
+    router.refresh();
+  }
+
   async function handleSubmit() {
     if (!selected) return;
     setLoading(true);
@@ -74,6 +96,70 @@ export default function AddRecordPage() {
     });
     router.push("/");
     router.refresh();
+  }
+
+  // 自定义记录模式
+  if (customMode) {
+    return (
+      <main className="min-h-screen pb-8">
+        <div className="mx-auto w-full max-w-md px-4 space-y-6 pt-6">
+          <button onClick={() => setCustomMode(false)} className="text-sm text-gray-400">
+            ← 返回选菜
+          </button>
+          <div className="rounded-3xl bg-white shadow-sm p-5 space-y-3">
+            <h1 className="text-lg font-bold">自定义记录</h1>
+            <p className="text-xs text-gray-400">
+              库里没有的菜，手动填热量记一笔（会存入你的个人菜品库，下次直接选）
+            </p>
+            {(
+              [
+                ["name", "菜名", "text"],
+                ["kcal", "热量 kcal（每份）", "number"],
+                ["proteinG", "蛋白质 g（可空）", "number"],
+                ["carbsG", "碳水 g（可空）", "number"],
+                ["fatG", "脂肪 g（可空）", "number"],
+              ] as const
+            ).map(([key, label, type]) => (
+              <div key={key}>
+                <label className="block text-xs text-gray-500 mb-1">{label}</label>
+                <input
+                  type={type}
+                  step="0.1"
+                  value={custom[key]}
+                  onChange={(e) => setCustom({ ...custom, [key]: e.target.value })}
+                  className="w-full rounded-xl bg-gray-50 border-0 px-3 py-2.5 text-sm focus:ring-2 focus:ring-brand outline-none"
+                />
+              </div>
+            ))}
+          </div>
+
+          <div className="rounded-3xl bg-white shadow-sm p-5">
+            <label className="block text-sm font-medium mb-3">餐次</label>
+            <div className="grid grid-cols-4 gap-2">
+              {MEALS.map((m) => (
+                <button
+                  key={m.value}
+                  onClick={() => setMealType(m.value)}
+                  className={`rounded-xl py-2.5 text-sm font-medium transition ${
+                    mealType === m.value ? "bg-brand text-white" : "bg-gray-50 text-gray-600"
+                  }`}
+                >
+                  {m.label}
+                </button>
+              ))}
+            </div>
+          </div>
+
+          <button
+            onClick={handleCustomSubmit}
+            disabled={loading || !custom.name.trim() || !custom.kcal}
+            className="w-full rounded-2xl bg-brand py-4 text-white font-semibold shadow-lg active:bg-brand-dark disabled:opacity-50"
+          >
+            {loading ? "记录中…" : "确认记录"}
+          </button>
+        </div>
+      </main>
+    );
   }
 
   // 第二步：选分量/餐次
@@ -245,6 +331,14 @@ export default function AddRecordPage() {
             </div>
           )}
         </div>
+
+        {/* 自定义记录入口 */}
+        <button
+          onClick={() => setCustomMode(true)}
+          className="w-full rounded-2xl border border-dashed border-gray-300 py-3.5 text-sm text-gray-400 active:bg-gray-50"
+        >
+          库里没有？自定义记一笔
+        </button>
       </div>
     </main>
   );

@@ -65,6 +65,7 @@ model User {
   sessions    Session[]
   records     MealRecord[]
   corrections Correction[]
+  dishes      Dish[]
 }
 
 model Canteen {
@@ -87,6 +88,8 @@ model Dish {
   name        String
   stallId     String
   stall       Stall   @relation(fields: [stallId], references: [id], onDelete: Cascade)
+  userId      String? // 空=公共菜，有值=该用户的个人菜
+  user        User?   @relation(fields: [userId], references: [id], onDelete: Cascade)
   kcal        Float // 每份（便利店为每包装）
   proteinG    Float
   carbsG      Float

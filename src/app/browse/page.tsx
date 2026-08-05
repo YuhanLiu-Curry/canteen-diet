@@ -22,10 +22,11 @@ export default async function BrowsePage() {
   if (!session?.user?.id) redirect("/login");
 
   const canteens = await prisma.canteen.findMany({
+    where: { name: { not: "__personal__" } },
     include: {
       stalls: {
         include: {
-          dishes: { where: { isActive: true }, orderBy: { name: "asc" } },
+          dishes: { where: { isActive: true, userId: null }, orderBy: { name: "asc" } },
         },
       },
     },

@@ -3,6 +3,7 @@ import { prisma } from "@/lib/prisma";
 
 export async function GET() {
   const canteens = await prisma.canteen.findMany({
+    where: { name: { not: "__personal__" } },
     include: {
       stalls: {
         include: {

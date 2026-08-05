@@ -4,6 +4,7 @@ import { redirect } from "next/navigation";
 import Link from "next/link";
 import { signOut } from "@/lib/auth";
 import { DeleteRecordButton } from "./delete-button";
+import { QuickRecord } from "./quick-record";
 
 const MEAL_LABEL: Record<string, string> = {
   breakfast: "早餐",
@@ -121,6 +122,9 @@ export default async function Home() {
             ))}
           </div>
         </div>
+
+        {/* 快捷再记 */}
+        <QuickRecord />
 
         {/* 今日记录 */}
         <div className="space-y-2">

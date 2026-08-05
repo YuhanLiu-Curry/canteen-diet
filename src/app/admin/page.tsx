@@ -11,6 +11,7 @@ export default async function AdminPage() {
   if (!user?.isAdmin) redirect("/");
 
   const canteens = await prisma.canteen.findMany({
+    where: { name: { not: "__personal__" } },
     include: { stalls: { include: { dishes: { select: { id: true } } } } },
     orderBy: { name: "asc" },
   });
