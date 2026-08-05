@@ -91,6 +91,7 @@ model Dish {
   proteinG    Float
   carbsG      Float
   fatG        Float
+  servingDesc String? // 份量规格，如 "1根35g"；空则默认 1份=100g
   confidence  String  @default("estimated") // estimated / calibrated / verified / label
   dataVersion Int     @default(1)
   isActive    Boolean @default(true)

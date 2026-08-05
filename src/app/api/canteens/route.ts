@@ -9,7 +9,7 @@ export async function GET() {
           dishes: {
             where: { isActive: true },
             orderBy: { name: "asc" },
-            select: { id: true, name: true, kcal: true, proteinG: true },
+            select: { id: true, name: true, kcal: true, proteinG: true, servingDesc: true },
           },
         },
       },

@@ -8,6 +8,7 @@ type Dish = {
   name: string;
   kcal: number;
   proteinG: number;
+  servingDesc?: string | null;
   stall: { name: string; canteen: { name: string } };
 };
 
@@ -18,7 +19,7 @@ type CanteenTree = {
   stalls: {
     id: string;
     name: string;
-    dishes: { id: string; name: string; kcal: number; proteinG: number }[];
+    dishes: { id: string; name: string; kcal: number; proteinG: number; servingDesc?: string | null }[];
   }[];
 };
 
@@ -55,7 +56,7 @@ export default function AddRecordPage() {
     return () => clearTimeout(t);
   }, [query]);
 
-  function pickDish(d: { id: string; name: string; kcal: number; proteinG: number }, path: string) {
+  function pickDish(d: { id: string; name: string; kcal: number; proteinG: number; servingDesc?: string | null }, path: string) {
     const [canteenName, stallName] = path.split(" / ");
     setSelected({
       ...d,
@@ -92,6 +93,9 @@ export default function AddRecordPage() {
             <p className="text-brand font-semibold mt-2">
               {Math.round(selected.kcal)} kcal / 份
             </p>
+            <p className="text-xs text-gray-400 mt-1">
+              1 份 = {selected.servingDesc ?? "100g"}
+            </p>
           </div>
 
           <div className="rounded-3xl bg-white shadow-sm p-5">
@@ -114,7 +118,12 @@ export default function AddRecordPage() {
           </div>
 
           <div className="rounded-3xl bg-white shadow-sm p-5">
-            <label className="block text-sm font-medium mb-3">分量</label>
+            <label className="block text-sm font-medium mb-3">
+              分量
+              <span className="text-xs font-normal text-gray-400 ml-2">
+                1 份 = {selected.servingDesc ?? "100g"}
+              </span>
+            </label>
             <div className="grid grid-cols-4 gap-2">
               {SERVINGS.map((s) => (
                 <button

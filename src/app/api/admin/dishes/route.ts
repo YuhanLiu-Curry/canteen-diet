@@ -14,7 +14,7 @@ export async function POST(request: Request) {
     return NextResponse.json({ error: "无权限" }, { status: 403 });
   }
   const body = await request.json();
-  const { name, stallId, kcal, proteinG, carbsG, fatG, confidence } = body;
+  const { name, stallId, kcal, proteinG, carbsG, fatG, confidence, servingDesc } = body;
   const trimmed = typeof name === "string" ? name.trim() : "";
   if (!trimmed || !stallId || kcal == null || proteinG == null || carbsG == null || fatG == null) {
     return NextResponse.json({ error: "字段不完整" }, { status: 400 });
@@ -33,6 +33,7 @@ export async function POST(request: Request) {
       proteinG,
       carbsG,
       fatG,
+      servingDesc: servingDesc?.trim() || null,
       confidence: confidence ?? "estimated",
     },
   });

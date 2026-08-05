@@ -117,14 +117,14 @@ export function AddDishForm({ canteens }: { canteens: Canteen[] }) {
   const [lastAdded, setLastAdded] = useState("");
   const nameRef = useRef<HTMLInputElement>(null);
   const [form, setForm] = useState({
-    name: "", kcal: "", proteinG: "", carbsG: "", fatG: "", confidence: "estimated",
+    name: "", kcal: "", proteinG: "", carbsG: "", fatG: "", confidence: "estimated", servingDesc: "",
   });
   const router = useRouter();
 
   const stalls = canteens.find((c) => c.id === canteenId)?.stalls ?? [];
   const locked = stallId !== ""; // 已选窗口后进入批量模式，锁定食堂/窗口
 
-  function field(key: keyof typeof form, label: string, w = "flex-1") {
+  function field(key: keyof typeof form, label: string, w = "flex-1", optional = false) {
     return (
       <div className={w}>
         <label className="block text-xs text-gray-500 mb-1">{label}</label>
@@ -132,9 +132,10 @@ export function AddDishForm({ canteens }: { canteens: Canteen[] }) {
           ref={key === "name" ? nameRef : undefined}
           value={form[key]}
           onChange={(e) => setForm({ ...form, [key]: e.target.value })}
-          required
-          type={key === "name" ? "text" : "number"}
+          required={!optional}
+          type={key === "name" || key === "servingDesc" ? "text" : "number"}
           step="0.1"
+          placeholder={key === "servingDesc" ? "如 1根35g（空=按100g）" : ""}
           className="w-full rounded border px-2 py-2 text-sm"
         />
       </div>
@@ -154,13 +155,14 @@ export function AddDishForm({ canteens }: { canteens: Canteen[] }) {
           carbsG: Number(form.carbsG),
           fatG: Number(form.fatG),
           confidence: form.confidence,
+          servingDesc: form.servingDesc,
         });
         if (r.ok) {
           setLastAdded(form.name);
           setCount((n) => n + 1);
           setError("");
-          // 批量模式：保留食堂/窗口/置信度，只清空菜名和营养值
-          setForm({ name: "", kcal: "", proteinG: "", carbsG: "", fatG: "", confidence: form.confidence });
+          // 批量模式：保留食堂/窗口/置信度，清空菜名/营养值/规格
+          setForm({ name: "", kcal: "", proteinG: "", carbsG: "", fatG: "", confidence: form.confidence, servingDesc: "" });
           nameRef.current?.focus();
           router.refresh();
         } else {
@@ -216,6 +218,7 @@ export function AddDishForm({ canteens }: { canteens: Canteen[] }) {
         {field("proteinG", "蛋白质g")}
         {field("carbsG", "碳水g")}
         {field("fatG", "脂肪g")}
+        {field("servingDesc", "规格(可空)", "flex-[1.5]", true)}
       </div>
       <button className="rounded bg-black px-4 py-2 text-white text-sm">
         {locked ? "添加并继续下一道" : "添加菜品"}
